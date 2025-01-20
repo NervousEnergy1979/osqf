@@ -6,4 +6,4 @@ To run:
 2. install requirements via poetry: $poetry install
 OR
 3. install requirements via pip: $pip install -r requirements.txt
-4. Open a jupyter notebook and run
+4. Open a one of the jupyter notebooks (`signal-combo.ipynb` or `signal-quantiling.ipynb`) and run it
