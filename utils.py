@@ -1,8 +1,8 @@
 """Helper functions."""
-
-import numpy as np
 import pandas as pd
-from numpy import copy, inf
+import numpy as np
+from numpy import inf
+from numpy import copy
 from numpy.linalg import norm
 
 
@@ -99,16 +99,9 @@ class ExceededMaxIterationsError(Exception):
         return repr(self.msg)
 
 
-def nearcorr(
-    A,
-    tol=[],
-    flag=0,
-    max_iterations=100,
-    n_pos_eig=0,
-    weights=None,
-    verbose=False,
-    except_on_too_many_iterations=True,
-):
+def nearcorr(A, tol=[], flag=0, max_iterations=100, n_pos_eig=0,
+             weights=None, verbose=False,
+             except_on_too_many_iterations=True):
     """
     X = nearcorr(A, tol=[], flag=0, max_iterations=100, n_pos_eig=0,
         weights=None, print=0)
@@ -157,7 +150,7 @@ def nearcorr(
 
     # If input is an ExceededMaxIterationsError object this
     # is a restart computation
-    if isinstance(A, ExceededMaxIterationsError):
+    if (isinstance(A, ExceededMaxIterationsError)):
         ds = copy(A.ds)
         A = copy(A.matrix)
     else:
@@ -165,7 +158,7 @@ def nearcorr(
 
     eps = np.spacing(1)
     if not np.all((np.transpose(A) == A)):
-        raise ValueError("Input Matrix is not symmetric")
+        raise ValueError('Input Matrix is not symmetric')
     if not tol:
         tol = eps * np.shape(A)[0] * np.array([1, 1])
     if weights is None:
@@ -184,13 +177,11 @@ def nearcorr(
         if iteration > max_iterations:
             if except_on_too_many_iterations:
                 if max_iterations == 1:
-                    message = (
-                        "No solution found in " + str(max_iterations) + " iteration"
-                    )
+                    message = "No solution found in "\
+                              + str(max_iterations) + " iteration"
                 else:
-                    message = (
-                        "No solution found in " + str(max_iterations) + " iterations"
-                    )
+                    message = "No solution found in "\
+                              + str(max_iterations) + " iterations"
                 raise ExceededMaxIterationsError(message, X, iteration, ds)
             else:
                 # exceptOnTooManyIterations is false so just silently
@@ -199,23 +190,21 @@ def nearcorr(
 
         Xold = copy(X)
         R = X - ds
-        R_wtd = Whalf * R
+        R_wtd = Whalf*R
         if flag == 0:
             X = proj_spd(R_wtd)
         elif flag == 1:
-            raise NotImplementedError(
-                "Setting 'flag' to 1 is currently\
-                                 not implemented."
-            )
+            raise NotImplementedError("Setting 'flag' to 1 is currently\
+                                 not implemented.")
         X = X / Whalf
         ds = X - R
         Yold = copy(Y)
         Y = copy(X)
         np.fill_diagonal(Y, 1)
-        normY = norm(Y, "fro")
-        rel_diffX = norm(X - Xold, "fro") / norm(X, "fro")
-        rel_diffY = norm(Y - Yold, "fro") / normY
-        rel_diffXY = norm(Y - X, "fro") / normY
+        normY = norm(Y, 'fro')
+        rel_diffX = norm(X - Xold, 'fro') / norm(X, 'fro')
+        rel_diffY = norm(Y - Yold, 'fro') / normY
+        rel_diffXY = norm(Y - X, 'fro') / normY
 
         X = copy(Y)
 
@@ -227,4 +216,4 @@ def proj_spd(A):
     d, v = np.linalg.eigh(A)
     A = (v * np.maximum(d, 0)).dot(v.T)
     A = (A + A.T) / 2
-    return A
+    return(A)
